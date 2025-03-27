@@ -340,36 +340,60 @@ if user:
                 st.session_state.pop(f"antwort_korrekt_{key_base}", None)
                 st.rerun()
 
+# === ADMINBEREICH (mit Passwortschutz) ===
+import glob
 
-# === ADMINBEREICH ===
 st.sidebar.title("🔐 Adminbereich")
 
-if st.sidebar.checkbox("Offene Antworten anzeigen"):
-    user_files = [f for f in os.listdir() if f.startswith("antworten_") and f.endswith(".json")]
-    for file in user_files:
-        st.sidebar.markdown(f"### 🧑 {file.replace('antworten_', '').replace('.json', '')}")
-        with open(file, "r", encoding="utf-8") as f:
-            daten = json.load(f)
-        for eintrag in daten:
-            st.sidebar.markdown(f"**{eintrag['frage_id']}** ({eintrag['zeit']}):")
-            st.sidebar.code(eintrag['antwort'])
+admin_pass = st.sidebar.text_input("Passwort eingeben:", type="password")
 
-if st.sidebar.checkbox("Punktestände anzeigen"):
-    fortschritt_files = [f for f in os.listdir() if f.startswith("fortschritt_") and f.endswith(".json")]
-    for file in fortschritt_files:
-        name = file.replace("fortschritt_", "").replace(".json", "")
-        with open(file, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        st.sidebar.write(f"{name}: {data['punkte']} Punkte, Frage {data['seite']}")
+if admin_pass == "Modul1":
+    if st.sidebar.checkbox("Offene Antworten anzeigen"):
+        user_files = [f for f in os.listdir() if f.startswith("antworten_") and f.endswith(".json")]
+        for file in user_files:
+            st.sidebar.markdown(f"### 🧑 {file.replace('antworten_', '').replace('.json', '')}")
+            with open(file, "r", encoding="utf-8") as f:
+                daten = json.load(f)
+            for eintrag in daten:
+                st.sidebar.markdown(f"**{eintrag['frage_id']}** ({eintrag['zeit']}):")
+                st.sidebar.code(eintrag['antwort'])
 
-# Neue Option zum Löschen aller Ergebnisse
-import glob
-if st.sidebar.button("🚨 Alle Nutzerergebnisse löschen"):
-    geloescht = 0
-    for file in glob.glob("antworten_*.json") + glob.glob("fortschritt_*.json"):
-        try:
-            os.remove(file)
-            geloescht += 1
-        except:
-            pass
-    st.sidebar.success(f"{geloescht} Dateien wurden gelöscht. Alle Nutzerergebnisse zurückgesetzt.")
+    if st.sidebar.checkbox("Punktestände anzeigen"):
+        fortschritt_files = [f for f in os.listdir() if f.startswith("fortschritt_") and f.endswith(".json")]
+        for file in fortschritt_files:
+            name = file.replace("fortschritt_", "").replace(".json", "")
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            st.sidebar.write(f"{name}: {data['punkte']} Punkte, Frage {data['seite']}")
+
+    if st.sidebar.button("🚨 Alle Nutzerergebnisse löschen"):
+        geloescht = 0
+        for file in glob.glob("antworten_*.json") + glob.glob("fortschritt_*.json"):
+            try:
+                os.remove(file)
+                geloescht += 1
+            except:
+                pass
+        st.sidebar.success(f"{geloescht} Dateien wurden gelöscht. Alle Nutzerergebnisse zurückgesetzt.")
+
+      
+      
+ 
+
+
+      
+      
+      
+
+
+
+
+    
+   
+       
+             
+            
+   
+
+
+  
